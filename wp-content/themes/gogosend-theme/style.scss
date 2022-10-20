@@ -1,0 +1,404 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700&display=swap');
+
+body {
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+}
+
+h1 {
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 52px;
+  letter-spacing: 0px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 300;
+  line-height: 30px;
+  letter-spacing: 0px;
+  text-align: center;
+}
+
+p {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 32px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+// navbar
+
+$content-width: 1000px;
+$breakpoint: 799px;
+$nav-height: 70px;
+$nav-background: #fff;
+$nav-font-color: #0c0c0c;
+$link-hover-color: #FF3859;
+
+.navigation {
+  height: $nav-height;
+  background: $nav-background;
+}
+
+.nav-container {
+  max-width: $content-width;
+  margin: 0 auto;
+}
+
+.brand {
+  position: absolute;
+  padding-left: 20px;
+  float: left;
+  line-height: 90px;
+  text-transform: uppercase;
+  font-size: 1.4em;
+
+  a,
+  a:visited {
+    color: $nav-font-color;
+    text-decoration: none;
+  }
+}
+
+nav {
+  float: right;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      float: left;
+      position: relative;
+
+      a {
+        display: block;
+        padding: 10px 20px 0 20px;
+        line-height: 50px;
+        background: $nav-background;
+        color: $nav-font-color;
+        text-decoration: none;
+
+
+        &::before {
+          transition: 300ms;
+          height: 5px;
+          content: "";
+          position: absolute;
+          background-color: $link-hover-color;
+          width: 0%;
+          bottom: 0px;
+        }
+
+        &:hover::before {
+          width: 70%;
+        }
+
+        &:not(:only-child):after {
+          padding-left: 4px;
+          content: ' ▾';
+        }
+      }
+
+      // Dropdown list
+      ul li {
+        min-width: 190px;
+
+        a {
+          padding: 15px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}
+
+
+.nav-dropdown {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-mobile {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: $nav-background;
+  height: $nav-height;
+  width: $nav-height;
+}
+
+@media only screen and (max-width: $breakpoint) {
+  .nav-mobile {
+    display: block;
+  }
+
+  nav {
+    width: 100%;
+    padding: $nav-height 0 15px;
+
+    ul {
+      display: none;
+
+      li {
+        float: none;
+
+        a {
+          padding: 15px;
+          line-height: 20px;
+
+          &:hover::before {
+            width: 20%;
+          }
+        }
+
+        ul li a {
+          padding-left: 30px;
+        }
+      }
+    }
+  }
+
+  .nav-dropdown {
+    position: static;
+  }
+}
+
+#nav-toggle {
+  position: absolute;
+  left: 18px;
+  top: 22px;
+  cursor: pointer;
+  padding: 10px 35px 16px 0px;
+
+  span,
+  span:before,
+  span:after {
+    cursor: pointer;
+    border-radius: 1px;
+    height: 5px;
+    width: 35px;
+    background: $link-hover-color;
+    position: absolute;
+    display: block;
+    content: '';
+    transition: all 300ms ease-in-out;
+  }
+
+  span:before {
+    top: -10px;
+  }
+
+  span:after {
+    bottom: -10px;
+  }
+
+  &.active span {
+    background-color: transparent;
+
+    &:before,
+    &:after {
+      top: 0;
+    }
+
+    &:before {
+      transform: rotate(45deg);
+    }
+
+    &:after {
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+@media screen and (min-width: $breakpoint) {
+  .nav-list {
+    display: block !important;
+  }
+}
+
+// container
+
+@mixin min($bp, $max: "null", $device: "screen") {
+  @if $max=="null" {
+    @media only #{$device} and (min-width: #{$bp}) {
+      @content;
+    }
+  }
+
+  @else {
+    @media only #{$device} and (min-width: #{$bp}) and (max-width: #{$max}) {
+      @content;
+    }
+  }
+}
+
+@function bp($bp) {
+  @return map-get($breakpoints, $bp);
+}
+
+$breakpoints: (na: 0px,
+  // For BS grid
+  xs: 320px,
+  // Smartphone
+  sm: 600px,
+  // Tablets
+  md: 900px,
+  // Tablets Landscape and small desktops
+  lg: 1200px,
+  // Desktops
+  xl: 1800px,
+  // Large Desktop
+);
+
+@function container($container-size, $true-val: false) {
+  @return map-get($container-sizes, $container-size);
+}
+
+$container-sizes: (sm: map-get($breakpoints, sm) - 30px,
+  md: map-get($breakpoints, md) - 40px,
+  lg: map-get($breakpoints, lg) - 50px,
+  xl: map-get($breakpoints, xl) - 400px);
+
+.container {
+  padding-right: 1rem;
+  padding-left: 1rem;
+
+  &:not(.is-fluid) {
+    margin: 0 auto;
+
+    @each $bp,
+    $container-size in $container-sizes {
+      @include min(#{bp(#{$bp})
+    }
+
+    ) {
+      width: 100%;
+      max-width: container(#{$bp});
+    }
+  }
+}
+}
+
+@each $bp,
+$container-size in $container-sizes {
+  .container-#{$bp} {
+    margin: 0 auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    width: 100%;
+
+    $i: index($container-sizes, $bp $container-size);
+
+    @for $j from $i through length($container-sizes) {
+      @include min(#{bp(nth(nth($container-sizes, $j), 1))}) {
+        max-width: container(#{nth(nth($container-sizes, $j), 1)});
+      }
+    }
+  }
+}
+
+.card {
+  width: 330px;
+  height: 230px;
+  padding: 2rem;
+  background-color: #fff;
+  margin: 4rem;
+}
+
+// SLIDER
+
+.swiper-slide {
+  text-align: center;
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.space {
+  padding: 5rem 0;
+}
+
+.swiper-wrapper.disabled {
+  transform: translate3d(0px, 0, 0) !important;
+}
+
+.swiper-pagination.disabled {
+  display: none;
+}
+
+.swiper-button-prev {
+  color: #28A9E0;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #28A9E0 !important;
+  background: #FFFFFF0D !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 1.4rem !important;
+}
+
+.swiper-button-prev:after {
+  padding-right: 4px;
+}
+
+.swiper-button-next:after {
+  padding-left: 4px;
+}
+
+.dot {
+  height: 32px;
+  width: 32px;
+  background-color: #FF3859;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -16px;
+}
+
+.card h3 {
+  color: #2D3236;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: center;
+
+}
+
+.card p {
+  color: #808080;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: center;
+}
