@@ -374,14 +374,7 @@ function my_deregister_heartbeat() {
 	if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow )
 		wp_deregister_script('heartbeat');
 }
-// --------------------------------------------
-// Załaduj JS asynchronicznie
-if (!is_admin()){
-	function add_defer_attribute($tag, $handle) {
-		return str_replace(' src', ' defer src', $tag);	
-	}
-	add_filter('script_loader_tag', 'add_defer_attribute', 10, 2);
-}
+
 // --------------------------------------------
 	function defer_parsing_of_js($url)
 {
@@ -431,3 +424,15 @@ $wp_rewrite->pagination_base = 's'; //where new-slug is the slug you want to use
 $wp_rewrite->flush_rules();
 }
 add_action('init', 'my_custom_pagination_base', 1);
+
+function slider_js_file() {
+    wp_enqueue_script( 'slider-script', 'https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js', '', '', true);
+	wp_enqueue_script( 'slider-settings', '/wp-content/themes/gogosend-theme/js/slider.js', '', '', true);
+
+}
+add_action( 'wp_enqueue_scripts', 'slider_js_file' );
+
+function add_theme_scripts() {
+    wp_enqueue_style( 'slider-style', 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css' );
+}
+add_action ( 'wp_enqueue_scripts', 'add_theme_scripts' );
